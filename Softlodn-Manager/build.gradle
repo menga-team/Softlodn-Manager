@@ -12,6 +12,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
     implementation("net.dv8tion:JDA:5.0.0-alpha.9")
+    implementation 'org.jsoup:jsoup:1.14.3'
 }
 
 test {

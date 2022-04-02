@@ -1,12 +1,12 @@
-import java.util.Random;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.components.ItemComponent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
+
+import java.util.Random;
 
 public class Commands extends ListenerAdapter {
     public void onMessageReceived(MessageReceivedEvent event) {
@@ -26,20 +26,11 @@ public class Commands extends ListenerAdapter {
             Message m = event.getMessage();
 
             if (args[0].equalsIgnoreCase(Main.prefix + "info")) {
-                EmbedBuilder info_command = new EmbedBuilder();
-                info_command.setTitle("Bot v1.0");
-                info_command.setDescription("Info");
-                info_command.addField("!info", "shows this info :man_shrugging:", false);
-                info_command.addField("!sc", "random lightshot screenshot", false);
-                info_command.addField("if some message contains 'girl' or 'frau' or something  similar", "random TFO female meme", false);
-                info_command.addField("if some message contains 'impfung' or 'corona' or something  similar", "Laner gets angry", false);
-                info_command.addField("if some message contains 'rg'", "bad.", false);
-                info_command.setColor(0xFB8B01);
-                event.getChannel().sendMessageEmbeds(info_command.build()).queue();
+                event.getChannel().sendMessageEmbeds(getInfoEmbed(event).build()).queue();
                 System.out.println("\ncommand: " + Main.prefix + "info\nservername: " + m.getGuild().getName() + "\nautor: " + m.getAuthor().getName() + "\nmessage: " + m.getContentRaw() + "\nnickname: " + m.getMember().getEffectiveName() + "\n");
             }
             else if (args[0].equalsIgnoreCase(Main.prefix + "sc")) {
-                event.getMessage().reply(this.getUrl()).setActionRow(new ItemComponent[]{Button.primary("sc-1", "another one")}).queue();
+                event.getMessage().replyEmbeds(getScEmbed(ImageUtils.getValidURL()).build()).setActionRow(new ItemComponent[]{Button.primary("sc-1", "another one")}).queue();
                 System.out.println("\ncommand: " + Main.prefix + "sc\nservername: " + m.getGuild().getName() + "\nautor: " + m.getAuthor().getName() + "\nmessage: " + m.getContentRaw() + "\nnickname: " + m.getMember().getEffectiveName() + "\n");
             }
             else if (args[0].equalsIgnoreCase(Main.prefix + "ping")) {
@@ -63,12 +54,7 @@ public class Commands extends ListenerAdapter {
                 for (int t = 0; t < corona.length; t++) {
                     if (m.getContentRaw().toLowerCase().contains(corona[t].toLowerCase())) {
                         //INFO: Embeds kinnen 6000 chars, normale messages lei 2000 chars
-                        EmbedBuilder sc_command = new EmbedBuilder();
-                        sc_command.addField("", corona_answer[0].replace("<dcping>", event.getAuthor().getAsMention().toString()), false);
-                        sc_command.addField("Fazit:", corona_answer[1], false);
-                        sc_command.addField("", corona_answer[2], false);
-                        sc_command.setThumbnail("https://i.redd.it/7csic62pd9b81.png");
-                        sc_command.setColor(0xFB8B01);
+                        EmbedBuilder sc_command = getCoronaEmbed(event, corona_answer);
                         event.getChannel().sendMessageEmbeds(sc_command.build()).queue();
                         System.out.println("\ncalled: corona (" + corona[t].toString() + ")\nservername: " + m.getGuild().getName() + "\nautor: " + m.getAuthor().getName() + "\nmessage: " + m.getContentRaw() + "\nnickname: " + m.getMember().getEffectiveName() + "\n");
                     }
@@ -79,20 +65,39 @@ public class Commands extends ListenerAdapter {
 
     public void onButtonInteraction(ButtonInteractionEvent event) {
         if (event.getButton().getId().equalsIgnoreCase("sc-1")) {
-            event.editMessage(this.getUrl()).setActionRow(new ItemComponent[]{Button.primary("sc-1", "another one")}).queue();
+            event.editMessageEmbeds(getScEmbed(ImageUtils.getValidURL()).build()).setActionRow(new ItemComponent[]{Button.primary("sc-1", "another one")}).queue();
             System.out.println("\nButton: another one\nservername: " + event.getGuild().getName() + "\nautor: " + event.getMember().getUser().getName() + "\nnickname: " + event.getMember().getEffectiveName() + "\n");
         }
     }
-
-    public String getUrl() {
-        Random rnd = new Random();
-        String[] abc = new String[]{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"};
-        String url = "https://prnt.sc/";
-
-        for(int i = 0; i < 6; ++i) {
-            url = url + abc[rnd.nextInt(abc.length)];
-        }
-
-        return url;
+    public static EmbedBuilder getInfoEmbed(MessageReceivedEvent event){
+        EmbedBuilder info_command = new EmbedBuilder();
+        info_command.setTitle("Bot v1.0");
+        info_command.setDescription("Info");
+        info_command.addField("!info", "shows this info :man_shrugging:", false);
+        info_command.addField("!sc", "random lightshot screenshot", false);
+        info_command.addField("if some message contains 'girl' or 'frau' or something  similar", "random TFO female meme", false);
+        info_command.addField("if some message contains 'impfung' or 'corona' or something  similar", "Laner gets angry", false);
+        info_command.addField("if some message contains 'rg'", "bad.", false);
+        info_command.setThumbnail("https://i.imgur.com/p0yBD80.png");
+        info_command.setColor(0xFB8B01);
+        return info_command;
+    }
+    public static EmbedBuilder getCoronaEmbed(MessageReceivedEvent event, String[] corona_answer){
+        EmbedBuilder corona_command = new EmbedBuilder();
+        corona_command.addField("", corona_answer[0].replace("<dcping>", event.getAuthor().getAsMention().toString()), false);
+        corona_command.addField("Fazit:", corona_answer[1], false);
+        corona_command.addField("", corona_answer[2], false);
+        corona_command.setThumbnail("https://i.redd.it/7csic62pd9b81.png");
+        corona_command.setColor(0xFB8B01);
+        return corona_command;
+    }
+    public static EmbedBuilder getScEmbed(String[] url){
+        EmbedBuilder sc_command = new EmbedBuilder();
+        sc_command.setTitle("Lightshot Screenshot");
+        sc_command.setImage(url[1]);
+        sc_command.addField("URL", url[0], false);
+        sc_command.setThumbnail("https://i.imgur.com/p0yBD80.png");
+        sc_command.setColor(0xFB8B01);
+        return sc_command;
     }
 }
