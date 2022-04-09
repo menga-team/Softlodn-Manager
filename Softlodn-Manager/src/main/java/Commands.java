@@ -87,7 +87,6 @@ public class Commands extends ListenerAdapter {
         corona_command.addField("", corona_answer[0].replace("<dcping>", event.getAuthor().getAsMention().toString()), false);
         corona_command.addField("Fazit:", corona_answer[1], false);
         corona_command.addField("", corona_answer[2], false);
-        corona_command.setThumbnail("https://i.redd.it/7csic62pd9b81.png");
         corona_command.setColor(0xFB8B01);
         return corona_command;
     }
