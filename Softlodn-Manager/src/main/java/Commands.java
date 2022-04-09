@@ -75,8 +75,8 @@ public class Commands extends ListenerAdapter {
         info_command.setDescription("Info");
         info_command.addField("!info", "shows this info :man_shrugging:", false);
         info_command.addField("!sc", "random lightshot screenshot", false);
-        info_command.addField("if some message contains 'girl' or 'frau' or something  similar", "random TFO female meme", false);
-        info_command.addField("if some message contains 'impfung' or 'corona' or something  similar", "Laner gets angry", false);
+        info_command.addField("'girl' or any synonyms", "Random TFO-No-Girls-Joke", false);
+        info_command.addField("'vaccine' or any synonyms", "Great life advice", false);
         info_command.addField("if some message contains 'rg'", "bad.", false);
         info_command.setThumbnail("https://i.imgur.com/p0yBD80.png");
         info_command.setColor(0xFB8B01);
