@@ -60,7 +60,7 @@ public class ImageUtils {
         Random rnd = new Random();
         String[] abc = new String[]{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"};
         String url = "https://prnt.sc/";
-        for(int i = 0; i < 6; ++i) {
+        for(int i = 0; i < 6;  ++i) {
             url = url + abc[rnd.nextInt(abc.length)];
         }
         return url;
@@ -68,13 +68,25 @@ public class ImageUtils {
     public static String[] getValidURL()  {
         String validURL = "";
         String originalURL = "";
+        int loops = 0;
+        int maxLoops = 3;
+        boolean looping = true;
         try {
             do {
-                validURL = getURL();
-                originalURL = getOriginalPrntscUrl(validURL);
-            } while (!testImageURL(originalURL));
+                loops += 1;
+                if (loops > maxLoops){
+                    validURL = "something went wrong";
+                    originalURL = "https://avatars.githubusercontent.com/u/102855037?v=4";
+                    looping = false;
+                }
+                else {
+                    validURL = getURL();
+                    originalURL = getOriginalPrntscUrl(validURL);
+                }
+            } while (!testImageURL(originalURL) || !looping);
         } catch (IOException e) {
-            validURL = getURL();
+            validURL = "something went wrong";
+            originalURL = "https://avatars.githubusercontent.com/u/102855037?v=4";
         }
         return new String[]{validURL, originalURL};
     }
